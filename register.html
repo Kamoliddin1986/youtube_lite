@@ -15,27 +15,48 @@
     <div class="container">
         <div class="wrapper">
             <h1 class="title">Registration Page</h1>
-            <form action="#" class="site-form">
+            <form action="#" class="site-form" id="register_form">
                 <label>
                     <span class="zmdi zmdi-account"></span>
-                    <input type="text" id="usernameInput" placeholder="Your name" required>
+                    <input type="text" name="username" id="usernameInput" placeholder="Your name" required>
                 </label>
                 <label>
                     <span class="zmdi zmdi-lock"></span>
-                    <input type="password" id="passwordInput" placeholder="Password" required>
-                    <button class="zmdi zmdi-eye" type="button" id="showButton"></button>
+                    <input type="password" name="password" id="passwordInput" placeholder="Password" required>
+                    <button class="zmdi zmdi-eye"  type="button" id="showButton"></button>
                 </label>
                 <label class="custom-upload">
                     <span class="zmdi zmdi-upload"></span>
                     <span class="file-name">click upload a avatar picture</span>
-                    <input type="file" id="uploadInput" accept="image/*">
+                    <input type="file" name="useravatar" id="uploadInput" accept="image/*">
                 </label>
                 <input type="submit" value="Register" id="submitButton">
             </form>
             <a href="./login.html" class="sign-link">I am already member</a>
-            <img src="img/signup-image.jpg" alt="signup-image" class="signup-image">
+            <!-- <img src="img/signup-image.jpg" alt="signup-image" class="signup-image"> -->
         </div>
     </div>
 
+    <script>
+        // let formData = new FormData(register_form)
+        register_form.addEventListener('submit', (event) => {
+            event.preventDefault()
+            let {username,password} = event.target
+            let uploadFile = document.querySelector('#uploadInput')
+            console.log(uploadFile.files[0]);
+            let formData = new FormData()
+            // console.log(uploadFile.files);
+            formData.append('username', username.value)
+            formData.append('password', password.value)
+            formData.append('file',uploadFile.files[0])
+            // console.log(formData.values);
+            fetch('http://localhost:7777/register', {
+                method:'POST',
+                // headers: {"Content-Type": "application/json"},
+                body: formData})
+                
+            })
+    
+    </script>
 </body>
 </html>
