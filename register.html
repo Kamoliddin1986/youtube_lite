@@ -46,17 +46,18 @@
             let uploadFile = document.querySelector('#uploadInput')
             console.log(uploadFile.files[0]);
             let formData = new FormData()
-            // console.log(uploadFile.files);
+
             formData.append('username', username.value)
             formData.append('password', password.value)
             formData.append('file',uploadFile.files[0])
-            // console.log(formData.values);
+
             fetch('http://localhost:7777/register', {
                 method:'POST',
-                // headers: {"Content-Type": "application/json"},
+
                 body: formData
             }).then(res => res.json())
             .then(reg_info => {
+
                 if(reg_info.registered){
                     location.href = './login.html'
                 }else{

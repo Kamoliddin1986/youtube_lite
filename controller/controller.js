@@ -36,6 +36,9 @@ const Controller = {
                     avatar_name: regUser.avatar_name
                 })
                 write_to_file('users.json',users)
+                return res.send(JSON.stringify({
+                    registered: true
+                }))
             }
             
         }

@@ -1,20 +1,14 @@
 [
     {
-        "id": "21a1a73a-4b59-4818-8683-5eee576d6820",
-        "username": "olma",
-        "password": "$2a$10$p.1TO4Hhg9raAvI59NLcUulBVIYBTgrPG8N9ga9ZYyqsVpz.VLvru",
-        "avatar_name": "1675584065808.jpg"
+        "id": "dd4d28fb-07f1-4b1b-b682-b41f7e2049cc",
+        "username": "Kamoliddin",
+        "password": "$2a$08$MNq0hZ4ePlrD/UxoUrO4quHgqI7ZZiBF2H...Ln.UGeXP2XPR1I62",
+        "avatar_name": "1675609198799.jpg"
     },
     {
-        "id": "f0e19628-3e35-423b-bbfb-abfac352bed8",
-        "username": "Ot",
-        "password": "$2a$08$N8FD1Y9PyUs.R5Fl921kh.9473zuKUXxNPe2Da14SbDFwVPuGSlyu",
-        "avatar_name": "1675584378073.jpg"
-    },
-    {
-        "id": "600ea1a5-50ba-4fb4-b5e0-5d48547e4ea8",
-        "username": "Ot2",
-        "password": "$2a$08$0X0TI6viH3pZiY.M7t4l7e968FhFXupvZE20u7xZT2wHjg0uUpFWm",
-        "avatar_name": "1675608425641.jpg"
+        "id": "6394ff54-1aaf-4c32-97a8-2580ad2f37c1",
+        "username": "Kamoliddin1",
+        "password": "$2a$08$j1vkNq/HvCSjMLJ1sROpq.Z8G0hacLLDyrEVVFQfOMliRteg1fhra",
+        "avatar_name": "1675609299476.jpg"
     }
 ]
