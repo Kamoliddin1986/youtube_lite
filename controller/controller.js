@@ -2,7 +2,7 @@ import uuid from 'uuid.v4'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
-import { read_file, write_to_file,remove_file } from "../api/api.js";
+import { read_file, write_to_file,remove_file,get_token } from "../api/api.js";
 dotenv.config()
 const Controller = {
     REGISTER: async(req,res) => {
@@ -41,6 +41,33 @@ const Controller = {
                 }))
             }
             
+        }
+    },
+    LOGIN: (req,res) => {
+        let logData = req.body
+
+        let findUser = read_file('users.json').find(user => user.username == logData.username)
+        if(findUser){
+            if(bcrypt.compare(logData.password,findUser.password)){
+                let token = get_token(findUser.username,findUser.avatar_name)
+
+                return res.send(JSON.stringify({
+                    'login': true,
+                    'token': token
+                }))
+            }else{
+                return res.send(JSON.stringify({
+                    login: false,
+                    msg: 'password is not correct!'
+                }))
+
+            }
+        }else{
+            return res.send(JSON.stringify({
+                login: false,
+                msg: 'username is not correct!'
+            }))
+
         }
     }
 }

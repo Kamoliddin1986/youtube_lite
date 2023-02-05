@@ -19,7 +19,9 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-router.post('/register',upload.single('file'),Controller.REGISTER)
+router
+      .post('/register',upload.single('file'),Controller.REGISTER)
+      .post('/login',Controller.LOGIN)
     
 
 

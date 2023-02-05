@@ -14,30 +14,49 @@
 <body>
     <div class="container">
         <div class="wrapper sign-in">
-            <form action="#" class="site-form">
+            <form action="#" class="site-form" id="login_form">
                 <h1 class="title">Sign in</h1>
                 <label>
                     <span class="zmdi zmdi-account"></span>
-                    <input type="text" id="usernameInput" placeholder="Your name">
+                    <input type="text" id="usernameInput" name="username" placeholder="Your name">
                 </label>
                 <label>
                     <span class="zmdi zmdi-lock"></span>
-                    <input type="password" id="passwordInput" placeholder="Password">
-                    <button class="zmdi zmdi-eye" id="showButton" type="button"></button>
+                    <input type="password" id="passwordInput" name="password"  placeholder="Password">
+                    <button class="zmdi zmdi-eye" id="showButton"  type="button"></button>
                 </label>
                 <input type="submit" value="Log in" id="submitButton">
             </form>
             <a href="./register.html" class="sign-link">Create an account</a>
-            <img src="img/signin-image.jpg" alt="signin-image" class="signin-image">
+            <!-- <img src="img/signin-image.jpg" alt="signin-image" class="signin-image"> -->
         </div>
     </div>
 
 
     <script>
-        usernameInput.addEventListener('submit', (event) => {
+        login_form.addEventListener('submit', (event) => {
             event.preventDefault()
+            let {username,password} = event.target
 
-            let {} = event.target
+            fetch('http://localhost:7777/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value
+                })
+            }).then(res => res.json())
+            .then(login_info => {
+                if(login_info.login){
+                    localStorage.setItem('token',login_info.token)
+                    location.href = './index.html'
+                }else{
+                    location.reload()
+                    alert(`${login_info.msg}`)
+                }
+            })
+
+         
         })
     </script>
 </body>
