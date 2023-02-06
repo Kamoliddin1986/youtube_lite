@@ -72,11 +72,13 @@ const Controller = {
     },
     CHECK_TOKEN: (req,res) => {
         let token_status = check_token(req.body.token)
+        let users = read_file('users.json')
 
         if(token_status.username){
             return res.send(JSON.stringify({
                 registered_user: token_status.username,
-                avatar_name: token_status.img
+                avatar_name: token_status.img,
+                users
             }))
         }else{
             return res.send(JSON.stringify({

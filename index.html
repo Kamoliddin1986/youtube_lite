@@ -57,7 +57,7 @@
         </header>
         <main class="main">
             <div class="left-menu-wrapper">
-                <ul class="navbar-list">
+                <ul class="navbar-list" id="users_list">
                     <h1>YouTube Members</h1>
                     <li class="channel active" data_id="main">
                         <a href="#">
@@ -99,6 +99,15 @@
         </main>
     </div>
 <script>
+
+    function creat_element(...restData){
+        let store = []
+        for(let el of restData) {
+            store.push(document.createElement(el))
+        }
+        return store
+    }
+    /* Chacking token*/
     let token = localStorage.getItem('token')
     fetch('http://localhost:7777/index.html', {
         method: 'POST',
@@ -112,11 +121,32 @@
             if(token_status.registered_user){
                 console.log(token_status.avatar_name);
                 user_avatar.src = `./model/upload_files/avatars/${token_status.avatar_name}`
+                for (let user of token_status.users){
+                    let [li, a, img, span] = creat_element('li','a', 'img', 'span')
+                    li.className = "channel";
+                    li.setAttribute('Data-id',`${user.id}`);
+                    a.href = '#';
+                    img.src = `./model/upload_files/avatars/${user.avatar_name}`
+                    img.setAttribute('width', '30px')
+                    img.setAttribute('height', '30px')
+                    span.innerHTML = user.username
+                    a.append(img,span)
+                    li.append(a)
+                    users_list.append(li)
+                                        
+                }
             }else{
-                // location.href = './login.html'
+                location.href = './login.html'
             } 
         
     })
+/* <li class="channel" data-id="1">
+                        <a href="#">
+                            <img src="https://cdn-icons-png.flaticon.com/512/146/146031.png" alt="channel-icon" width="30px" height="30px">
+                            <span>Hikmat</span>
+                        </a>
+                    </li>*/
+
 </script>
 </body>
 </html>
