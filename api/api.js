@@ -25,7 +25,7 @@ function remove_file(file_name){
 
 function get_token(username,avatar_name){
     let token = jwt.sign({name: `${username}`, avatar_name: `${avatar_name}`},process.env.SECRET_KEY,{
-        expiresIn: '2h'
+        expiresIn: '2s'
     })
     return token
 }
@@ -33,10 +33,11 @@ function get_token(username,avatar_name){
 function check_token(token){
     try {
         let tok =  jwt.verify(token,process.env.SECRET_KEY)
+
         return {username: tok.name, img: tok.avatar_name}       
     } catch (error) {
         console.log('Token is not actual!!!'); 
-        return      
+        return {username: false}   
     }
 }
 

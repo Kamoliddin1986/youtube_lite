@@ -70,15 +70,20 @@ const Controller = {
 
         }
     },
+    GET_INFO: (_,res) => {
+        let users = read_file('users.json')
+        return res.send(JSON.stringify({
+            users
+        }))
+    },
     CHECK_TOKEN: (req,res) => {
         let token_status = check_token(req.body.token)
-        let users = read_file('users.json')
+        
 
         if(token_status.username){
             return res.send(JSON.stringify({
                 registered_user: token_status.username,
-                avatar_name: token_status.img,
-                users
+                avatar_name: token_status.img
             }))
         }else{
             return res.send(JSON.stringify({
