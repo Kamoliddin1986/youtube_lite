@@ -1,3 +1,4 @@
+import { CONNREFUSED } from 'dns'
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
@@ -22,6 +23,7 @@ const upload = multer({storage: storage})
 router
       .post('/register',upload.single('file'),Controller.REGISTER)
       .post('/login',Controller.LOGIN)
+      .post('/index.html', Controller.CHECK_TOKEN)
     
 
 

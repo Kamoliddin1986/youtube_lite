@@ -2,7 +2,7 @@ import uuid from 'uuid.v4'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
-import { read_file, write_to_file,remove_file,get_token } from "../api/api.js";
+import { read_file, write_to_file,remove_file,get_token,check_token } from "../api/api.js";
 dotenv.config()
 const Controller = {
     REGISTER: async(req,res) => {
@@ -69,6 +69,21 @@ const Controller = {
             }))
 
         }
+    },
+    CHECK_TOKEN: (req,res) => {
+        let token_status = check_token(req.body.token)
+
+        if(token_status.username){
+            return res.send(JSON.stringify({
+                registered_user: token_status.username,
+                avatar_name: token_status.img
+            }))
+        }else{
+            return res.send(JSON.stringify({
+                registered_user: false
+            }))
+        }
+
     }
 }
 

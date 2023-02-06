@@ -30,9 +30,20 @@ function get_token(username,avatar_name){
     return token
 }
 
+function check_token(token){
+    try {
+        let tok =  jwt.verify(token,process.env.SECRET_KEY)
+        return {username: tok.name, img: tok.avatar_name}       
+    } catch (error) {
+        console.log('Token is not actual!!!'); 
+        return      
+    }
+}
+
 export {
     read_file,
     write_to_file,
     remove_file,
-    get_token
+    get_token,
+    check_token
 }
