@@ -1,8 +1,12 @@
 import uuid from 'uuid.v4'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
+import fs from 'fs'
 
-import { read_file, write_to_file,remove_file,get_token,check_token } from "../api/api.js";
+import { read_file, write_to_file,remove_file,
+        get_token,check_token,read_any_file,
+        write_to_any_file } from "../api/api.js";
+import uuidV4 from 'uuid.v4';
 dotenv.config()
 const Controller = {
     REGISTER: async(req,res) => {
@@ -91,6 +95,26 @@ const Controller = {
             }))
         }
 
+    },
+    UPLOAD_VIDEO: (req,res) => {
+        let date = new Date().toJSON().slice(0, 16);
+        let user = read_file('users.json').find(user => user.username == req.body.username)
+        let videos_list = read_any_file('./model/videos_list/videos_list.json')
+        let file_name = uuidV4()       
+        fs.writeFileSync(`./model/upload_files/videos/${file_name}.mp4`,req.file.buffer)
+  
+        videos_list.push({
+            id: file_name,
+            title: req.body.title,
+            username: user.username,
+            size: Math.round((req.file.size)/1025/1025)+' MB',
+            created_date: date.replace('T','|'),
+            userId: user.id,
+            user_avatar: user.avatar_name
+
+        })
+
+        write_to_any_file('./model/videos_list/videos_list.json',videos_list)
     }
 }
 
