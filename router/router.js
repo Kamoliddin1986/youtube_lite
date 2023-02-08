@@ -30,8 +30,9 @@ router
       .post('/get_info',Controller.GET_INFO)
       .post('/check_token', Controller.CHECK_TOKEN)
       .post('/upload_video',upload2.single("video"),Controller.UPLOAD_VIDEO )
-      .post('/get_admin_videos',Controller.ADMIN_PAGE_RENDER)
+      .get('/get_admin_videos',Controller.ADMIN_PAGE_RENDER)
       .get('/delete/:id', Controller.DELETE_VIDEO)
+      .post('/update/:id', Controller.UPDATE_TITLE)
     
 
 

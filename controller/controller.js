@@ -5,7 +5,7 @@ import fs from 'fs'
 
 import { read_file, write_to_file,remove_file,
         get_token,check_token,read_any_file,
-        write_to_any_file } from "../api/api.js";
+        write_to_any_file,remove_video } from "../api/api.js";
 
 import uuidV4 from 'uuid.v4';
 dotenv.config()
@@ -122,26 +122,68 @@ const Controller = {
         res.send('video adedd!')
     },
     ADMIN_PAGE_RENDER: (req,res) => {
-        
-        let admin_videos = read_any_file('./model/videos_list/videos_list.json').filter(video => video.userId == req.body.user_id)
+     let token = JSON.parse(check_token(req.headers.token))
+     let allVideos = read_any_file('./model/videos_list/videos_list.json')
+        if(token.username){
+        let admin_videos = allVideos.filter(video => video.userId == token.user_id)
         
         return res.send(JSON.stringify({
+            token_status: true,
             admin_videos
         }))
+    }else{
+        return res.send(JSON.stringify({
+            token_status: false,
+            msg: 'Token is not actual'
+        }))
+    }
     },
     DELETE_VIDEO: (req,res) => {
-
+        let token = JSON.parse(check_token(req.headers.token))
         let videos_list = read_any_file('./model/videos_list/videos_list.json') 
-        videos_list.forEach((vid, inx) => {
+        if(token.username){
+            videos_list.forEach((vid, inx) => {
+                if(vid.id == req.params.id){
+                    videos_list.splice(inx,1)
+                    remove_video(vid.id)
+                }
+            });
+            write_to_any_file('./model/videos_list/videos_list.json', videos_list)
+            return res.send( JSON.stringify({
+                token_status: true,
+                msg: 'video deleted!'
+            }))
+        }else{
+            return res.send(JSON.stringify({
+                token_status: false,
+                msg: 'Token is not actual'
+            }))
+        }
+    },
+    UPDATE_TITLE: (req,res) => {
+
+        let token = JSON.parse(check_token(req.headers.token))
+        let allVideos = read_any_file('./model/videos_list/videos_list.json')
+        if(token.username){
+        allVideos.forEach(vid => {
             if(vid.id == req.params.id){
-                videos_list.splice(inx,1)
-                console.log(videos_list);
+                console.log(req.body.title);
+                vid.title = req.body.title
             }
-        });
-        write_to_any_file('./model/videos_list/videos_list.json', videos_list)
-        return res.send( JSON.stringify({
-            msg: 'video deleted!'
-    }))
+        })
+        write_to_any_file('./model/videos_list/videos_list.json',allVideos)
+        return res.send(JSON.stringify({
+            token_status: true,
+            msg: 'title was updated'
+        }))
+            
+        }else{
+            return res.send(JSON.stringify({
+                token_status: false,
+                msg: 'Token is not actual'
+            }))
+        }
+
     }
 }
 

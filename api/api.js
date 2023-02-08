@@ -36,6 +36,12 @@ function remove_file(file_name){
     })
 }
 
+function remove_video(file_name){
+    fs.unlink(`./model/upload_files/videos/${file_name}`, (err) => {
+        if(err) throw err
+        console.log('Video was removed!');
+    })
+}
 
 function get_token(username,avatar_name,id){
     let token = jwt.sign({name: `${username}`, avatar_name: `${avatar_name}`, user_id: `${id}`},process.env.SECRET_KEY,{
@@ -47,6 +53,7 @@ function get_token(username,avatar_name,id){
 function check_token(token){
     try {
         let tok =  jwt.verify(token,process.env.SECRET_KEY)
+
         return JSON.stringify({username: tok.name, img: tok.avatar_name, user_id: tok.user_id})      
     } catch (error) {
         console.log('Token is not actual!!!'); 
@@ -61,5 +68,6 @@ export {
     get_token,
     check_token,
     read_any_file,
-    write_to_any_file
+    write_to_any_file,
+    remove_video
 }
