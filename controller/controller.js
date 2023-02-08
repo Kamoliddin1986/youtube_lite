@@ -6,6 +6,7 @@ import fs from 'fs'
 import { read_file, write_to_file,remove_file,
         get_token,check_token,read_any_file,
         write_to_any_file } from "../api/api.js";
+
 import uuidV4 from 'uuid.v4';
 dotenv.config()
 const Controller = {
@@ -53,7 +54,7 @@ const Controller = {
         let findUser = read_file('users.json').find(user => user.username == logData.username)
         if(findUser){
             if(bcrypt.compare(logData.password,findUser.password)){
-                let token = get_token(findUser.username,findUser.avatar_name)
+                let token = get_token(findUser.username,findUser.avatar_name,findUser.id)
 
                 return res.send(JSON.stringify({
                     'login': true,
@@ -81,13 +82,14 @@ const Controller = {
         }))
     },
     CHECK_TOKEN: (req,res) => {
-        let token_status = check_token(req.body.token)
-        
+
+        let token_status = JSON.parse(check_token(req.body.token))       
 
         if(token_status.username){
             return res.send(JSON.stringify({
                 registered_user: token_status.username,
-                avatar_name: token_status.img
+                avatar_name: token_status.img,
+                user_id: token_status.user_id
             }))
         }else{
             return res.send(JSON.stringify({
@@ -98,23 +100,48 @@ const Controller = {
     },
     UPLOAD_VIDEO: (req,res) => {
         let date = new Date().toJSON().slice(0, 16);
-        let user = read_file('users.json').find(user => user.username == req.body.username)
+        let crData = req.body
+        let exName = req.file.originalname.split('.').at(-1)
+
         let videos_list = read_any_file('./model/videos_list/videos_list.json')
-        let file_name = uuidV4()       
-        fs.writeFileSync(`./model/upload_files/videos/${file_name}.mp4`,req.file.buffer)
+        let file_name = uuidV4()+'.'+exName      
+        fs.writeFileSync(`./model/upload_files/videos/${file_name}`,req.file.buffer)
   
         videos_list.push({
             id: file_name,
-            title: req.body.title,
-            username: user.username,
+            title: crData.title,
+            username: crData.username,
             size: Math.round((req.file.size)/1025/1025)+' MB',
             created_date: date.replace('T','|'),
-            userId: user.id,
-            user_avatar: user.avatar_name
+            userId: crData.user_id,
+            user_avatar: crData.avatar_name
 
         })
 
         write_to_any_file('./model/videos_list/videos_list.json',videos_list)
+        res.send('video adedd!')
+    },
+    ADMIN_PAGE_RENDER: (req,res) => {
+        
+        let admin_videos = read_any_file('./model/videos_list/videos_list.json').filter(video => video.userId == req.body.user_id)
+        
+        return res.send(JSON.stringify({
+            admin_videos
+        }))
+    },
+    DELETE_VIDEO: (req,res) => {
+
+        let videos_list = read_any_file('./model/videos_list/videos_list.json') 
+        videos_list.forEach((vid, inx) => {
+            if(vid.id == req.params.id){
+                videos_list.splice(inx,1)
+                console.log(videos_list);
+            }
+        });
+        write_to_any_file('./model/videos_list/videos_list.json', videos_list)
+        return res.send( JSON.stringify({
+            msg: 'video deleted!'
+    }))
     }
 }
 

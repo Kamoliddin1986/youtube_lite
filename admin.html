@@ -87,14 +87,19 @@
             <label class="custom-upload">
               <span class="zmdi zmdi-upload"></span>
               <span class="file-name">click upload a video</span>
-              <input type="file" name="input_video" id="uploadVideo" accept="video/*" />
+              <input
+                type="file"
+                name="input_video"
+                id="uploadVideo"
+                accept="video/*"
+              />
             </label>
             <input type="submit" value="Upload" id="submitButton" />
           </form>
           <!-- <img src="img/signin-image.jpg" class="signup-image"> -->
         </div>
         <div class="admin-wrapper">
-          <ul class="videos-list">
+          <ul class="videos-list" id="ui_id">
             <li class="video-item">
               <video
                 src="https://www.w3schools.com/html/mov_bbb.mp4"
@@ -116,39 +121,89 @@
 
     <script>
 
+      function creat_element(...restData) {
+        let store = [];
+        for (let el of restData) {
+          store.push(document.createElement(el));
+        }
+        return store;
+      }
+
       let token = localStorage.getItem("token");
-            fetch("http://localhost:7777/check_token", {
+      fetch("http://localhost:7777/check_token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token
+        }),
+      })
+        .then((res) => res.json())
+        .then((token_status) => {
+
+          if (token_status.registered_user) {
+            key = token_status.registered_user
+
+            upload_video.addEventListener("submit", (event) => {
+              event.preventDefault();
+              let { video_title } = event.target;
+              let uploadVideo = document.querySelector("#uploadVideo");
+              let formData = new FormData();
+              formData.append("title", video_title.value);
+              formData.append("username", token_status.registered_user);
+              formData.append("user_id", token_status.user_id);
+              formData.append("user_avatar_name", token_status.avatar_name);
+              formData.append("video", uploadVideo.files[0]);
+
+
+              fetch("http://localhost:7777/upload_video", {
+                method: "POST",
+                body: formData,
+              }).then(res => res.json())
+              .then(res => console.log(res));
+            });
+
+            fetch("http://localhost:7777/get_admin_videos", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                token,
-              }),
-            })
-              .then((res) => res.json())
-              .then((token_status) => {
+              body: JSON.stringify({user_id: token_status.user_id})
+            }).then(res => res.json())
+              .then(videos => {
+                for(let vid of videos.admin_videos){
 
-                if (token_status.registered_user) {
-                    
-              upload_video.addEventListener('submit', (event) => {
-                  event.preventDefault()
-                  let {video_title} = event.target
-                  let uploadVideo = document.querySelector('#uploadVideo')
-                  let formData = new FormData()
-                  formData.append('title', video_title.value)
-                  formData.append('username',token_status.registered_user)
-                  formData.append('video', uploadVideo.files[0])
-                  console.log(uploadVideo.files);
-
-                  fetch('http://localhost:7777/upload_video', {
-                      method: 'POST',
-                      body: formData
+                  let [li, video, p, img] = creat_element('li', 'video', 'p', 'img')
+                  li.className = 'video-item'
+                video.src = `./model/upload_files/videos/${vid.id}`;
+                video.setAttribute('controls', '')
+                p.className = 'content'
+                p.setAttribute('contenteditable','true')
+                p.setAttribute('data-id','2')
+                p.innerHTML = vid.title
+                img.src = './img/delete.png'
+                img.setAttribute('width', '25px')
+                img.className = 'delete-icon'
+                img.setAttribute('data-id', '2')
+                img.setAttribute('alt','upload')
+                img.addEventListener('click', function() {
+                  fetch(`http://localhost:7777/delete/${vid.id}`)
+                  .then(res => res.json)
+                  .then(res => {
+                    console.log(res.msg);
+                    location.reload()
                   })
+
+                } )
+                li.append(video,p,img)
+                ui_id.append(li)
+              }
+
               })
-            }else{
-                    location.href = "./login.html";
-                    alert('token is not actual!')
+
+
+          } else {
+            location.href = "./login.html";
+            alert("token is not actual!");
           }
-        })
+        });
     </script>
   </body>
 </html>

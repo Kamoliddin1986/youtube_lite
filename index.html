@@ -319,7 +319,7 @@
       })
         .then((res) => res.json())
         .then((token_status) => {
-
+          console.log(token_status);
           if (token_status.registered_user) {
             user_avatar.src = `./model/upload_files/avatars/${token_status.avatar_name}`;
             fetch("http://localhost:7777/get_info", {
@@ -348,7 +348,7 @@
               });
             
           } else {
-              location.href = "./login.html";
+              // location.href = "./login.html";
               alert('token is not actual!')
             
           }

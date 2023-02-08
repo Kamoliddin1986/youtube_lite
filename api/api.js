@@ -10,6 +10,7 @@ function read_file(file_name){
 }
 
 function read_any_file(file_rout){
+
     return JSON.parse(fs.readFileSync(`${file_rout}`))
 }
 
@@ -36,8 +37,8 @@ function remove_file(file_name){
 }
 
 
-function get_token(username,avatar_name){
-    let token = jwt.sign({name: `${username}`, avatar_name: `${avatar_name}`},process.env.SECRET_KEY,{
+function get_token(username,avatar_name,id){
+    let token = jwt.sign({name: `${username}`, avatar_name: `${avatar_name}`, user_id: `${id}`},process.env.SECRET_KEY,{
         expiresIn: '2h'
     })
     return token
@@ -46,8 +47,7 @@ function get_token(username,avatar_name){
 function check_token(token){
     try {
         let tok =  jwt.verify(token,process.env.SECRET_KEY)
-
-        return {username: tok.name, img: tok.avatar_name}       
+        return JSON.stringify({username: tok.name, img: tok.avatar_name, user_id: tok.user_id})      
     } catch (error) {
         console.log('Token is not actual!!!'); 
         return {username: false}   
