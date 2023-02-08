@@ -136,17 +136,21 @@
         let uploadVideo = document.querySelector("#uploadVideo");
         let formData = new FormData();
         formData.append("title", video_title.value);
-        formData.append("username", token_status.registered_user);
-        formData.append("user_id", token_status.user_id);
-        formData.append("user_avatar_name", token_status.avatar_name);
         formData.append("video", uploadVideo.files[0]);
 
         fetch("http://localhost:7777/upload_video", {
           method: "POST",
-          body: formData,
+          headers: {token},
+          body: formData
         })
           .then((res) => res.json())
-          .then((res) => console.log(res));
+          .then((res) => {
+            if(res.token_status){
+              console.log(res.msg);
+            }else{
+              console.log(res.msg);
+            }
+          });
       });
 
       fetch("http://localhost:7777/get_admin_videos", {

@@ -273,7 +273,7 @@
           </ul>
         </div>
         <div class="iframes-wrapper">
-          <ul class="iframes-list">
+          <ul class="iframes-list" id="video_card">
             <!-- fake video -->
             <li class="iframe">
               <video
@@ -310,53 +310,88 @@
       }
       /* Chacking token*/
       let token = localStorage.getItem("token");
-      fetch("http://localhost:7777/check_token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token,
-        }),
-      })
-        .then((res) => res.json())
-        .then((token_status) => {
-          console.log(token_status);
-          if (token_status.registered_user) {
-            user_avatar.src = `./model/upload_files/avatars/${token_status.avatar_name}`;
-            fetch("http://localhost:7777/get_info", {
-            method: "POST"
-          }).then((res) => res.json())
-            .then((got_info) => {
-                for(let user of got_info.users){
 
-                    let [li, a, img, span] = creat_element(
-                        "li",
-                        "a",
-                        "img",
-                        "span"
-                        );
-                  li.className = "channel";
-                  li.setAttribute("Data-id", `${user.id}`);
-                  a.href = "#";
-                  img.src = `./model/upload_files/avatars/${user.avatar_name}`;
-                  img.setAttribute("width", "30px");
-                  img.setAttribute("height", "30px");
-                  span.innerHTML = user.username;
-                  a.append(img, span);
-                  li.append(a);
-                  users_list.append(li);
+      fetch("http://localhost:7777/get_info", {
+        headers: { "Content-Type": "application/json", token }
+      }).then((res) => res.json())
+      .then(res => {
+        if(res.token_status){
+                user_avatar.src = `./model/upload_files/avatars/${res.img}`;
+                for(let user of res.users){                  
+                  let [li, a, img, span] = creat_element(
+                    "li",
+                    "a",
+                    "img",
+                    "span"
+                    );
+                    li.className = "channel";
+                    li.setAttribute("Data-id", `${user.id}`);
+                    a.href = "#";
+                    img.src = `./model/upload_files/avatars/${user.avatar_name}`;
+                    img.setAttribute("width", "30px");
+                    img.setAttribute("height", "30px");
+                    span.innerHTML = user.username;
+                    a.append(img, span);
+                    li.append(a);
+                    users_list.append(li);
+                  }
+
+
+                for(let vid of res.allVideos){
+                    let [li, video, div1, img1, div2, h2, h3, time, a, span, img2] = 
+                    creat_element('li','video', 'div', 'img','div', 'h2','h3','time','a','span','img')
+                    video.src = `./model/upload_files/videos/${vid.id}`,
+                    video.setAttribute('controls',''),
+                    img1.src = `./model/upload_files/avatars/${vid.user_avatar}`,
+                    img1.setAttribute('alt', 'channel-icon'),
+                    div1.className = 'iframe-footer',
+                    div1.append(img1)
+                    h2.className = 'channel-name'
+                    h2.innerHTML = vid.username
+                    h3.className = 'iframe-title'
+                    h3.innerHTML = vid.title
+                    time.className = 'uploaded-time'
+                    time.innerHTML = vid.created_date
+                    a.className = 'download'
+                    a.href = '#'
+                    span.innerHTML = vid.size
+                    img2.src = './img/download.png'
+                    a.append(span,img2)
+                    div2.className = 'iframe-footer-text'
+                    div2.append(h2,h3,time,a)
+                    li.className = "iframe"
+                    div1.append(div2)
+                    li.append(video,div1)
+                    video_card.append(li)
+                  }
+                }else{
+                  location.href = "./login.html";
                 }
-              });
-            
-          } else {
-              // location.href = "./login.html";
-              alert('token is not actual!')
-            
-          }
-
-        });
-
-        
-
+                });            
+                
+                
+                
+                /* <li class="iframe">
+              <video
+                src="https://www.w3schools.com/html/mov_bbb.mp4"
+                controls=""
+              ></video>
+              <div class="iframe-footer">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/146/146031.png"
+                  alt="channel-icon"
+                />
+                <div class="iframe-footer-text">
+                  <h2 class="channel-name">Hikmat</h2>
+                  <h3 class="iframe-title">Falonchiga otvet</h3>
+                  <time class="uploaded-time">2020/02/08 | 15.24</time>
+                  <a class="download" href="#">
+                    <span>20 MB</span>
+                    <img src="./img/download.png" />
+                  </a>
+                </div>
+              </div>
+            </li>*/
 
     </script>
   </body>

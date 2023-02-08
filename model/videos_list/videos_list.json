@@ -1,10 +1,56 @@
 [
     {
-        "id": "b86c1bfc-78dd-47a5-9eca-79edb48f1d8e.mp4",
-        "title": "Ma'ruza 2",
-        "username": "Kamoliddin1",
+        "id": "ea43f318-5f6d-4443-83e8-8f2eab3ed51f.MP4",
+        "title": "Maluba",
+        "username": "Kamoliddin2",
         "size": "4 MB",
-        "created_date": "2023-02-08|11:36",
-        "userId": "6394ff54-1aaf-4c32-97a8-2580ad2f37c1"
+        "created_date": "2023-02-08|17:58",
+        "userId": "7c917a5b-5372-45a0-8dcc-3f6d1c1625a6",
+        "user_avatar": "1675703407004.jpg"
+    },
+    {
+        "id": "3a8db442-cbf6-459c-9127-bc4646002f3f.mp4",
+        "title": "Tabiat",
+        "username": "Kamoliddin2",
+        "size": "3 MB",
+        "created_date": "2023-02-08|17:59",
+        "userId": "7c917a5b-5372-45a0-8dcc-3f6d1c1625a6",
+        "user_avatar": "1675703407004.jpg"
+    },
+    {
+        "id": "89ba5aea-ac97-4a8d-8bb8-1234fbc936e1.mp4",
+        "title": "Ma'ruza",
+        "username": "Kamoliddin2",
+        "size": "4 MB",
+        "created_date": "2023-02-08|17:59",
+        "userId": "7c917a5b-5372-45a0-8dcc-3f6d1c1625a6",
+        "user_avatar": "1675703407004.jpg"
+    },
+    {
+        "id": "dbdc4a86-afea-4c1c-8214-5a1c4286c18c.mp4",
+        "title": "Tandir",
+        "username": "Kamoliddin1",
+        "size": "8 MB",
+        "created_date": "2023-02-08|17:59",
+        "userId": "6394ff54-1aaf-4c32-97a8-2580ad2f37c1",
+        "user_avatar": "1675609299476.jpg"
+    },
+    {
+        "id": "d672cc9b-d16a-4054-a5a0-68e9abee5500.mp4",
+        "title": "Zil zila",
+        "username": "Kamoliddin1",
+        "size": "2 MB",
+        "created_date": "2023-02-08|18:00",
+        "userId": "6394ff54-1aaf-4c32-97a8-2580ad2f37c1",
+        "user_avatar": "1675609299476.jpg"
+    },
+    {
+        "id": "78f99889-4704-4d4d-aac7-e6998b2a20b3.mp4",
+        "title": "Vulqon",
+        "username": "Kamoliddin1",
+        "size": "3 MB",
+        "created_date": "2023-02-08|18:00",
+        "userId": "6394ff54-1aaf-4c32-97a8-2580ad2f37c1",
+        "user_avatar": "1675609299476.jpg"
     }
 ]

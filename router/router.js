@@ -27,7 +27,7 @@ const upload2 = multer()
 router
       .post('/register',upload.single('file'),Controller.REGISTER)
       .post('/login',Controller.LOGIN)
-      .post('/get_info',Controller.GET_INFO)
+      .get('/get_info',Controller.GET_INFO)
       .post('/check_token', Controller.CHECK_TOKEN)
       .post('/upload_video',upload2.single("video"),Controller.UPLOAD_VIDEO )
       .get('/get_admin_videos',Controller.ADMIN_PAGE_RENDER)

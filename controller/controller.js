@@ -75,11 +75,25 @@ const Controller = {
 
         }
     },
-    GET_INFO: (_,res) => {
+    GET_INFO: (req,res) => {
+        let token = JSON.parse(check_token(req.headers.token))
+
+        if(token.username){
         let users = read_file('users.json')
+        let allVideos = read_any_file('./model/videos_list/videos_list.json')
         return res.send(JSON.stringify({
-            users
+            token_status: true,
+            users,
+            allVideos,
+            img: token.img
         }))
+    }else{
+        return res.send(JSON.stringify({
+
+            token_status: false,
+            msg: 'Token is not actual'
+        }))
+    }
     },
     CHECK_TOKEN: (req,res) => {
 
@@ -99,27 +113,36 @@ const Controller = {
 
     },
     UPLOAD_VIDEO: (req,res) => {
-        let date = new Date().toJSON().slice(0, 16);
-        let crData = req.body
-        let exName = req.file.originalname.split('.').at(-1)
+        let token = JSON.parse(check_token(req.headers.token))
 
-        let videos_list = read_any_file('./model/videos_list/videos_list.json')
-        let file_name = uuidV4()+'.'+exName      
-        fs.writeFileSync(`./model/upload_files/videos/${file_name}`,req.file.buffer)
-  
-        videos_list.push({
-            id: file_name,
-            title: crData.title,
-            username: crData.username,
-            size: Math.round((req.file.size)/1025/1025)+' MB',
-            created_date: date.replace('T','|'),
-            userId: crData.user_id,
-            user_avatar: crData.avatar_name
-
-        })
-
-        write_to_any_file('./model/videos_list/videos_list.json',videos_list)
-        res.send('video adedd!')
+        if(token.username){
+            let date = new Date().toJSON().slice(0, 16);
+            let crData = req.body
+            let exName = req.file.originalname.split('.').at(-1)            
+            let videos_list = read_any_file('./model/videos_list/videos_list.json')
+            let file_name = uuidV4()+'.'+exName      
+            fs.writeFileSync(`./model/upload_files/videos/${file_name}`,req.file.buffer)
+            
+            videos_list.push({
+                id: file_name,
+                title: crData.title,
+                username: token.username,
+                size: Math.round((req.file.size)/1025/1025)+' MB',
+                created_date: date.replace('T','|'),
+                userId: token.user_id,
+                user_avatar: token.img                
+            })            
+            write_to_any_file('./model/videos_list/videos_list.json',videos_list)
+            return res.send(JSON.stringify({
+                token_status: true,
+                msg: 'video adedd!'
+            }))
+        }else{
+            return res.send(JSON.stringify({
+                token_status: false,
+                msg: 'Token is not actual'
+            }))
+        }
     },
     ADMIN_PAGE_RENDER: (req,res) => {
      let token = JSON.parse(check_token(req.headers.token))
