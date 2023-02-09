@@ -126,11 +126,11 @@
               width: 20px;
             "
           >
-            <img src="img/mic.svg" alt="mic" width="20" height="25" />
+            <img src="img/mic.svg" alt="mic" width="20" height="25" onclick="speech()" />
           </button>
         </form>
         <section class="header-right">
-          <button type="button" class="voice-btn hover-after">
+          <button type="button" class="voice-btn hover-after" >
             <svg
               viewbox="0 0 24 24"
               focusable="false"
@@ -271,8 +271,26 @@
       </main>
     </div>
     <script>
+      var recognizer = new webkitSpeechRecognition()
+      recognizer.interimResults = true;
+      recognizer.lang = 'ru-Ru'
+      recognizer.onresult = function (event) {
+    var result = event.results[event.resultIndex];
+    if (result.isFinal) {
+      let search = document.querySelector('#search_line')
+      search.value = result[0].transcript
 
-      
+    } else {
+      console.log('middle result ', result[0].transcript);
+    }
+  };
+
+  function speech () {
+
+    recognizer.start();
+  }
+  
+
       searchbtn.addEventListener('click', function() {
         let search = document.querySelector('#search_line')        
         localStorage.setItem('video_title',`${search.value}`)
@@ -329,10 +347,10 @@
                 console.log(localStorage.getItem('video_title')=='' );
                 for(let vid of res.allVideos){
                   
-                  if(localStorage.getItem('onlineUserId')=='') {
+                  if(!localStorage.getItem('onlineUserId')) {
                     onlineUserId = vid.userId
                   }
-                  if(localStorage.getItem('video_title')=='') {
+                  if(!localStorage.getItem('video_title')) {
                     video_title = vid.title
                   }
                   if(vid.userId == onlineUserId) {
