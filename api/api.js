@@ -57,7 +57,7 @@ function check_token(token){
         return JSON.stringify({username: tok.name, img: tok.avatar_name, user_id: tok.user_id})      
     } catch (error) {
         console.log('Token is not actual!!!'); 
-        return {username: false}   
+        return JSON.stringify({username: false})   
     }
 }
 

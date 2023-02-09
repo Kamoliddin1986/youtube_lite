@@ -86,8 +86,9 @@
             </svg>
           </a>
         </section>
-        <form action="#" class="search-box">
+        <form action="#" class="search-box" id="search_form">
           <input
+            id="search_line"
             list="datalist"
             type="text"
             placeholder="Search"
@@ -95,11 +96,10 @@
           />
           <datalist id="datalist">
             <!-- bu fake data -->
-            <option value="Falonchiga otvet"></option>
-            <option value="nima gap"></option>
+
           </datalist>
 
-          <button type="submit" class="search-btn hover-after">
+          <button type="submit" onclick="location.reload(); return false;" class="search-btn hover-after" id="searchbtn">
             <svg
               viewbox="0 0 24 24"
               focusable="false"
@@ -259,48 +259,29 @@
               </a>
             </li>
             <!-- fake user -->
-            <li class="channel" data-id="1">
-              <a href="#">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/146/146031.png"
-                  alt="channel-icon"
-                  width="30px"
-                  height="30px"
-                />
-                <span>Hikmat</span>
-              </a>
-            </li>
+            
           </ul>
         </div>
         <div class="iframes-wrapper">
           <ul class="iframes-list" id="video_card">
             <!-- fake video -->
-            <li class="iframe">
-              <video
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
-                controls=""
-              ></video>
-              <div class="iframe-footer">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/146/146031.png"
-                  alt="channel-icon"
-                />
-                <div class="iframe-footer-text">
-                  <h2 class="channel-name">Hikmat</h2>
-                  <h3 class="iframe-title">Falonchiga otvet</h3>
-                  <time class="uploaded-time">2020/02/08 | 15.24</time>
-                  <a class="download" href="#">
-                    <span>20 MB</span>
-                    <img src="./img/download.png" />
-                  </a>
-                </div>
-              </div>
-            </li>
+            
           </ul>
         </div>
       </main>
     </div>
     <script>
+
+      
+      searchbtn.addEventListener('click', function() {
+        let search = document.querySelector('#search_line')        
+        localStorage.setItem('video_title',`${search.value}`)
+
+        console.log('click');
+      }
+      )
+
+
       function creat_element(...restData) {
         let store = [];
         for (let el of restData) {
@@ -315,9 +296,11 @@
         headers: { "Content-Type": "application/json", token }
       }).then((res) => res.json())
       .then(res => {
+        console.log(res);
         if(res.token_status){
                 user_avatar.src = `./model/upload_files/avatars/${res.img}`;
-                for(let user of res.users){                  
+                for(let user of res.users){ 
+                  
                   let [li, a, img, span] = creat_element(
                     "li",
                     "a",
@@ -327,6 +310,10 @@
                     li.className = "channel";
                     li.setAttribute("Data-id", `${user.id}`);
                     a.href = "#";
+                    a.addEventListener('click', function() {
+                      localStorage.setItem("onlineUserId", `${user.id}`)
+                      location.reload()                      
+                    })
                     img.src = `./model/upload_files/avatars/${user.avatar_name}`;
                     img.setAttribute("width", "30px");
                     img.setAttribute("height", "30px");
@@ -336,10 +323,25 @@
                     users_list.append(li);
                   }
 
-
+                  let onlineUserId = localStorage.getItem('onlineUserId') 
+                  let video_title = localStorage.getItem('video_title')
+                  console.log(localStorage.getItem('onlineUserId')=='');
+                console.log(localStorage.getItem('video_title')=='' );
                 for(let vid of res.allVideos){
-                    let [li, video, div1, img1, div2, h2, h3, time, a, span, img2] = 
-                    creat_element('li','video', 'div', 'img','div', 'h2','h3','time','a','span','img')
+                  
+                  if(localStorage.getItem('onlineUserId')=='') {
+                    onlineUserId = vid.userId
+                  }
+                  if(localStorage.getItem('video_title')=='') {
+                    video_title = vid.title
+                  }
+                  if(vid.userId == onlineUserId) {
+                    if(vid.title == video_title){
+
+                      let [li, video, div1, img1, div2, h2, h3, time, a, span, img2, option] = 
+                      creat_element('li','video', 'div', 'img','div', 'h2','h3','time','a','span','img','option')
+                    option.innerHTML = vid.title
+                    datalist.append(option)
                     video.src = `./model/upload_files/videos/${vid.id}`,
                     video.setAttribute('controls',''),
                     img1.src = `./model/upload_files/avatars/${vid.user_avatar}`,
@@ -353,7 +355,8 @@
                     time.className = 'uploaded-time'
                     time.innerHTML = vid.created_date
                     a.className = 'download'
-                    a.href = '#'
+                    a.setAttribute('download','')
+                    a.href = `./model/upload_files/videos/${vid.id}`
                     span.innerHTML = vid.size
                     img2.src = './img/download.png'
                     a.append(span,img2)
@@ -364,34 +367,19 @@
                     li.append(video,div1)
                     video_card.append(li)
                   }
+                  }   
+                  }
+                  localStorage.setItem('onlineUserId','')
+                  localStorage.setItem('video_title','')
+                  // onlineUserId = ''
                 }else{
                   location.href = "./login.html";
                 }
-                });            
+                });       
                 
                 
                 
-                /* <li class="iframe">
-              <video
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
-                controls=""
-              ></video>
-              <div class="iframe-footer">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/146/146031.png"
-                  alt="channel-icon"
-                />
-                <div class="iframe-footer-text">
-                  <h2 class="channel-name">Hikmat</h2>
-                  <h3 class="iframe-title">Falonchiga otvet</h3>
-                  <time class="uploaded-time">2020/02/08 | 15.24</time>
-                  <a class="download" href="#">
-                    <span>20 MB</span>
-                    <img src="./img/download.png" />
-                  </a>
-                </div>
-              </div>
-            </li>*/
+              
 
     </script>
   </body>
