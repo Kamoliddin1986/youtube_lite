@@ -94,24 +94,7 @@ const Controller = {
             msg: 'Token is not actual'
         }))
     }
-    },
-    CHECK_TOKEN: (req,res) => {
-
-        let token_status = JSON.parse(check_token(req.body.token))       
-
-        if(token_status.username){
-            return res.send(JSON.stringify({
-                registered_user: token_status.username,
-                avatar_name: token_status.img,
-                user_id: token_status.user_id
-            }))
-        }else{
-            return res.send(JSON.stringify({
-                registered_user: false
-            }))
-        }
-
-    },
+    },   
     UPLOAD_VIDEO: (req,res) => {
         let token = JSON.parse(check_token(req.headers.token))
 

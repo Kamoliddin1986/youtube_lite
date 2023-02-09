@@ -69,7 +69,9 @@
               </g>
             </svg>
           </a>
+          
         </section>
+        <button onclick="logout()">  <h4>Logout</h4> </button>
       </header>
       <main class="main">
         <div class="wrapper">
@@ -96,30 +98,21 @@
             </label>
             <input type="submit" value="Upload" id="submitButton" />
           </form>
-          <!-- <img src="img/signin-image.jpg" class="signup-image"> -->
+          <img src="img/signin-image.jpg" class="signup-image">
         </div>
         <div class="admin-wrapper">
           <ul class="videos-list" id="ui_id">
-            <li class="video-item">
-              <video
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
-                controls=""
-              ></video>
-              <p class="content" data-id="2" contenteditable="true">dars</p>
-              <img
-                src="./img/delete.png"
-                width="25px"
-                alt="upload"
-                class="delete-icon"
-                data-id="2"
-              />
-            </li>
+
           </ul>
         </div>
       </main>
     </div>
 
     <script>
+      function logout(){
+        localStorage.setItem('token','')
+        location.reload()
+      }
       function creat_element(...restData) {
         let store = [];
         for (let el of restData) {
